@@ -1,0 +1,39 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module('minyong-application', ['internet', 'mobility'])
+    module.source = [
+        'model/minyong-application.cc',
+        'model/minyong-pkt-header.cc',
+        'helper/minyong-application-helper.cc',
+        ]
+
+    module_test = bld.create_ns3_module_test_library('minyong-application')
+    module_test.source = [
+        'test/minyong-application-test-suite.cc',
+        ]
+    # Tests encapsulating example programs should be listed here
+    if (bld.env['ENABLE_EXAMPLES']):
+        module_test.source.extend([
+        #    'test/minyong-application-examples-test-suite.cc',
+             ])
+
+    headers = bld(features='ns3header')
+    headers.module = 'minyong-application'
+    headers.source = [
+        'model/minyong-application.h',
+        'model/minyong-pkt-header.h',
+        'helper/minyong-application-helper.h',
+        ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()
+
